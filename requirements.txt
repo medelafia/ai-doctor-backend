@@ -6,3 +6,4 @@ pydantic
 keras 
 typing
 scikit-learn
+tensorflow
