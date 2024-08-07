@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+fastapi
+pydantic
+keras 
+typing
+sklearn

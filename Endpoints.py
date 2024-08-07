@@ -3,18 +3,15 @@ import pandas as pd
 import numpy as np 
 import re 
 from sklearn.feature_extraction.text import CountVectorizer
-from typing import Union  , List 
+from typing import List 
 from keras.models import load_model
-import json 
 from pydantic import BaseModel 
 from fastapi.middleware.cors import CORSMiddleware 
-from bs4 import BeautifulSoup 
-import requests 
-from googlesearch import search 
+
 app = FastAPI()
 
 origins = [
-    "http://localhost:5173",
+    "https://medelafia.github.io",
 ]
 
 app.add_middleware(
@@ -87,13 +84,6 @@ async def start_up() :
 class BloodFeatures(BaseModel) : 
     name : str 
     value : float 
-
-def findDefinition(keyword) : 
-    res = search(keyword + " sick", num_results=10 , lang="en")
-    result = list(res)
-    response = requests.get(result[0])
-    soup = BeautifulSoup(response.content , "html.parser")
-    return soup.find_all("p")[0].text 
 
 @app.get("/predictDisease")
 async def predict_disease(symptoms : str) : 
