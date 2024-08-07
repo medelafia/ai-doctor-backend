@@ -5,4 +5,4 @@ fastapi
 pydantic
 keras 
 typing
-sklearn
+scikit-learn
