@@ -1,4 +1,4 @@
-*.h5
+
 *.ipynb
 __pycache__
 *.txt
