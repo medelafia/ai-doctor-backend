@@ -1,6 +1,5 @@
 
 *.ipynb
 __pycache__
-*.txt
 
 
