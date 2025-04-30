@@ -8,8 +8,8 @@ from keras.models import load_model
 from pydantic import BaseModel 
 from fastapi.middleware.cors import CORSMiddleware 
 import google.generativeai as genai 
-
-
+import requests 
+import io
 app = FastAPI()
 
 origins = [
@@ -41,6 +41,9 @@ df_labels = None
 
 generativeai_model = None 
  
+file1 = requests.get("https://github.com/medelafia/ai-doctor-backend/raw/refs/heads/main/disease_model.h5") 
+file2 = requests.get("https://github.com/medelafia/ai-doctor-backend/raw/refs/heads/main/blood_analyse_model.h5")
+
 def replace_space(x) : 
     return re.sub(r'\(.*?\)' , '' , x).lower().strip().lstrip().rstrip().replace(" " , "_") 
 
@@ -69,12 +72,12 @@ async def start_up() :
     diseaseVectorizer.fit_transform(df_disease["prognosis"]) 
     df_disease = df_disease.drop(["prognosis"] , axis = 1) 
     df_disease_columns = df_disease.columns 
-    disease_model = load_model("disease_model.h5")
+    disease_model = load_model(io.BytesIO(file1.content ))
     ## blood disease data prepare 
     df_blood_disease = pd.read_csv("Blood_samples_dataset_balanced_2(f).csv") 
     bloodDiseaseVectorizer.fit_transform(df_blood_disease["Disease"]) 
     df_disease_blood_columns = df_blood_disease.drop(["Disease"] , axis = 1 ).columns 
-    disease_blood_model = load_model("blood_analyse_model.h5")
+    disease_blood_model = load_model(io.BytesIO(file2.content))
     ## definition 
     df_medquad = pd.read_csv("medquad.csv")
     df_medquad = df_medquad.drop(["source"] , axis=1)
