@@ -83,6 +83,7 @@ async def lifespan(app: FastAPI):
     
     genai.configure(api_key="AIzaSyB2SICCajUAwD6pI9WzRObKGgRcg3wN5qs") 
     generativeai_model = genai.GenerativeModel(model_name="gemini-1.5-flash") 
+    yield 
 
 class BloodFeatures(BaseModel) : 
     name : str 
