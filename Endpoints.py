@@ -10,19 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import google.generativeai as genai 
 import requests 
 import io
-app = FastAPI()
+from contextlib import asynccontextmanager
 
-origins = [
-    "http://localhost:5173",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 ## simple disease variables
 diseaseVectorizer = CountVectorizer()
@@ -47,8 +36,10 @@ file2 = requests.get("https://github.com/medelafia/ai-doctor-backend/raw/refs/he
 def replace_space(x) : 
     return re.sub(r'\(.*?\)' , '' , x).lower().strip().lstrip().rstrip().replace(" " , "_") 
 
-@app.on_event("startup") 
-async def start_up() : 
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     global diseaseVectorizer 
     global df_disease_columns
     global disease_model 
@@ -97,6 +88,20 @@ class BloodFeatures(BaseModel) :
     name : str 
     value : float 
 
+
+app = FastAPI(lifespan=lifespan)
+
+origins = [
+    "https://medelafia.github.io/ai-doctor/",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 ## endpoints for the disease predection 
 @app.get("/predictDisease")
 async def predict_disease(symptoms : str) : 
