@@ -92,7 +92,7 @@ class BloodFeatures(BaseModel) :
 app = FastAPI(lifespan=lifespan)
 
 origins = [
-    "https://medelafia.github.io/ai-doctor/",
+    "*",
 ]
 
 app.add_middleware(
