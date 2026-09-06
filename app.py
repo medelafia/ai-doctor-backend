@@ -9,8 +9,11 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware 
 import google.generativeai as genai 
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+import os
 
 
+load_dotenv()
 ## simple disease variables
 diseaseVectorizer = CountVectorizer()
 df_disease = None
@@ -27,7 +30,7 @@ df_labels = None
 ## definition of geneartive ai model 
 
 generativeai_model = None 
-
+api_key = os.getenv("API_KEY")
 
 def replace_space(x) : 
     return re.sub(r'\(.*?\)' , '' , x).lower().strip().lstrip().rstrip().replace(" " , "_") 
@@ -77,7 +80,7 @@ async def lifespan(app: FastAPI):
     df_labels = pd.merge( df_labels_defintions , df_labels_pre, on="Disease")
     df_labels["Disease"] = df_labels["Disease"].apply(replace_space)
     
-    genai.configure(api_key="AIzaSyB2SICCajUAwD6pI9WzRObKGgRcg3wN5qs") 
+    genai.configure(api_key=api_key) 
     generativeai_model = genai.GenerativeModel(model_name="gemini-1.5-flash") 
     yield 
 
